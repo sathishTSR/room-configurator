@@ -33,22 +33,6 @@ export default function Room() {
     },
   ];
 
-  useFrame(({ camera }) => {
-    const cameraDirection = new THREE.Vector3();
-    camera.getWorldDirection(cameraDirection);
-
-    wallRefs.current.forEach((mesh, i) => {
-      if (mesh) {
-        const opacity = 1
-
-        const material = mesh.material as THREE.MeshStandardMaterial;
-        material.opacity = opacity;
-        material.transparent = true;
-        material.depthWrite = opacity > 0.5;
-      }
-    });
-  });
-
   return (
     <group>
       {/* Walls */}
@@ -73,7 +57,7 @@ export default function Room() {
         position={[0, 0, 0]}
       >
         <planeGeometry args={[10, 10]} />
-        <meshStandardMaterial color="#555" />
+        <meshStandardMaterial color="#555" side={2} />
       </mesh>
     </group>
   );
