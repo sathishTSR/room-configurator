@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { Vector3 } from "three";
 
 export type DroppedAsset = {
   type: string;
