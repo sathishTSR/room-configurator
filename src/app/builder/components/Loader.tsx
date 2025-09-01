@@ -9,9 +9,9 @@ type HUDLoaderProps = {
 
 const ringDefs = [
   { inner: 2.7, outer: 2.85, y: 0.8, isProgress: true },
-  { inner: 2.8, outer: 2.85, y: 0.6 },
-  { inner: 2.2, outer: 2.25, y: 0.2 },
-  { inner: 1.6, outer: 1.65, y: -0.2 },
+  { inner: 2.7, outer: 2.85, y: 0.6 },
+  { inner: 2.1, outer: 2.25, y: 0.2 },
+  { inner: 1.5, outer: 1.65, y: -0.2 },
 ];
 
 export default function HUDLoader({ position = [0, 0, 0] }: HUDLoaderProps) {
@@ -37,12 +37,12 @@ export default function HUDLoader({ position = [0, 0, 0] }: HUDLoaderProps) {
 
   const adjustedPosition: [number, number, number] = [
     position[0],
-    position[1] + 1,
+    0.1,
     position[2],
   ];
 
   return (
-    <group scale={0.5} ref={groupRef} position={adjustedPosition}>
+    <group scale={0.3} ref={groupRef} position={adjustedPosition}>
       {springs.map((props, i) => {
         const def = ringDefs[i];
         return (
@@ -67,7 +67,7 @@ export default function HUDLoader({ position = [0, 0, 0] }: HUDLoaderProps) {
               <ringGeometry args={[def.inner, def.outer, 64]} />
             )}
             <meshBasicMaterial
-              color={def.isProgress ? "#ffffff" : "#555"}
+              color={def.isProgress ? "#ffffff" : "#ffffff"}
               transparent
               opacity={def.isProgress ? 1 : 0.4 - i * 0.1}
             />

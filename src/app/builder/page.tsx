@@ -96,7 +96,7 @@ export default function Builder() {
         Math.min(halfDepth, intersection.z)
       );
 
-      return [intersection.x, 0.5, intersection.z] as [number, number, number];
+      return [intersection.x, 0, intersection.z] as [number, number, number];
     },
     []
   );
