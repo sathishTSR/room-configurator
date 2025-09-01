@@ -8,30 +8,7 @@ import { useBuilderStore } from "./store";
 import * as THREE from "three";
 import Wall from "./components/Wall";
 import { a, useSpring } from "@react-spring/three";
-
-function DroppedAssets() {
-  const droppedAssets = useBuilderStore((s) => s.droppedAssets);
-  return (
-    <>
-      {droppedAssets.map((asset, i) => (
-        <DroppedFurniture key={i} position={asset.position} />
-      ))}
-    </>
-  );
-}
-
-function DroppedFurniture({
-  position,
-}: {
-  position: [number, number, number];
-}) {
-  return (
-    <mesh position={position}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshNormalMaterial />
-    </mesh>
-  );
-}
+import DroppedAssets from "./components/DroppedAssets";
 
 function PreviewBox({
   droppingAsset,
@@ -179,9 +156,9 @@ export default function Builder() {
         onDragEnter={handleDragEnter}
         onDrop={handleDrop}
       >
-        <Canvas camera={{ position: [0, 3, 5] }}>
+        <Canvas camera={{ position: [-9.194, 12.056, 14.559], fov: 30 }}>
           <CanvasWithRefs>
-            <Environment preset="city" />
+            <Environment files={["/hdr/indoor.hdr"]} />
             <Wall />
             <DroppedAssets />
             <PreviewBox

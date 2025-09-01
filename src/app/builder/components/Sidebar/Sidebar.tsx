@@ -6,8 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { useBuilderStore } from "../../store";
 
 const assets = [
-  { name: "Bed", src: "/bed.png", type: "bed" },
-  { name: "Chair", src: "/chair.png", type: "chair" },
+  { name: "Sofa", src: "/images/sofa.png", type: "sofa" },
+  { name: "Chair", src: "/images/chair.png", type: "chair" },
   // Add more assets as needed
 ];
 
