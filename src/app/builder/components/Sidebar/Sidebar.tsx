@@ -14,7 +14,7 @@ const assets = [
 const types = ["all", "bed", "chair"];
 
 export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true); 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [showFilter, setShowFilter] = useState(false);
