@@ -51,7 +51,7 @@ function DroppedFurniture({
         <meshNormalMaterial />
       </mesh>
     );
-  }
+  } 
 
   return (
     <group

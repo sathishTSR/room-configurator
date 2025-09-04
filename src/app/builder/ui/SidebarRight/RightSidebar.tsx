@@ -26,7 +26,7 @@ export default function RightSidebar() {
       const value = parseFloat(e.target.value);
       const updated = [...selectedAsset[field]] as [number, number, number];
       updated[index] = isNaN(value) ? 0 : value;
-      updateSelectedAsset({ [field]: updated } as any);
+      updateSelectedAsset({ [field]: updated });
     };
 
   const axisLabels = ["X", "Y", "Z"];
