@@ -1,30 +1,59 @@
 import { useBuilderStore } from "../store";
 import React, { Suspense } from "react";
-import { Gltf, useProgress } from "@react-three/drei";
+import { Gltf } from "@react-three/drei";
 import HUDLoader from "./Loader";
-
-
-
+import { ThreeEvent } from "@react-three/fiber";
 
 function DroppedFurniture({
-  type,
-  position,
+  asset,
 }: {
-  type: string;
-  position: [number, number, number];
+  asset: {
+    id: string;
+    type: string;
+    position: [number, number, number];
+    rotation: [number, number, number];
+    scale: [number, number, number];
+  };
 }) {
-  if (type === "chair") {
-    return <Gltf src="/models/chair.glb" position={position} scale={[1, 1, 1]} />;
+  const setSelectedAssetId = useBuilderStore((s) => s.setSelectedAssetId);
+  const selectedAssetId = useBuilderStore((s) => s.selectedAssetId);
+
+  const isSelected = selectedAssetId === asset.id;
+
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation(); // prevent click bubbling to scene
+    setSelectedAssetId(asset.id);
+  };
+
+  let model = null;
+  if (asset.type === "chair") {
+    model = <Gltf src="/models/chair.glb" />;
+  } else if (asset.type === "sofa") {
+    model = <Gltf src="/models/sofa.glb" />;
+  } else {
+    model = (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshNormalMaterial />
+      </mesh>
+    );
   }
-  if (type === "sofa") {
-    return <Gltf src="/models/sofa.glb" position={position} scale={[1, 1, 1]} />;
-  }
-  // fallback for unknown types
+
   return (
-    <mesh position={position}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshNormalMaterial />
-    </mesh>
+    <group
+      position={asset.position}
+      rotation={asset.rotation}
+      scale={asset.scale}
+      onClick={handleClick}
+    >
+      {model}
+      {isSelected && (
+        <mesh>
+          <boxGeometry args={[1.2, 1.2, 1.2]} />
+          <meshBasicMaterial color="yellow" wireframe />
+        </mesh>
+      )}
+    </group>
   );
 }
 
@@ -32,9 +61,12 @@ function DroppedAssetsInner() {
   const droppedAssets = useBuilderStore((s) => s.droppedAssets);
   return (
     <>
-      {droppedAssets.map((asset, i) => (
-        <Suspense key={i} fallback={<HUDLoader position={asset.position} />}>
-          <DroppedFurniture type={asset.type === "bed" ? "sofa" : asset.type} position={asset.position} />
+      {droppedAssets.map((asset) => (
+        <Suspense
+          key={asset.id}
+          fallback={<HUDLoader position={asset.position} />}
+        >
+          <DroppedFurniture asset={asset} />
         </Suspense>
       ))}
     </>
