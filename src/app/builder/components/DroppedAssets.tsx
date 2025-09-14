@@ -4,6 +4,7 @@ import { Gltf, TransformControls } from "@react-three/drei";
 import HUDLoader from "./Loader";
 import { ThreeEvent } from "@react-three/fiber";
 import { Box3, Vector3, Group } from "three";
+import { Select } from "@react-three/postprocessing";
 
 const DroppedFurniture = forwardRef<Group, {
   asset: {
@@ -15,7 +16,7 @@ const DroppedFurniture = forwardRef<Group, {
   };
 }>(({ asset }, ref) => {
   const setSelectedAssetId = useBuilderStore((s) => s.setSelectedAssetId);
-
+  const selectedAssetId = useBuilderStore((s) => s.selectedAssetId);
 
   let model = null;
   if (asset.type === "chair") {
@@ -32,21 +33,23 @@ const DroppedFurniture = forwardRef<Group, {
   } 
 
   return (
-    <group
-      ref={ref}
-      position={asset.position}
-      rotation={asset.rotation}
-      scale={asset.scale}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation(); // prevent bubbling to outer plane
-        if (e.delta <= 0) {
-          console.log('asset clicked');
-          setSelectedAssetId(asset.id);
-        }
-      }}
-    >
-      {model}
-    </group>
+    <Select enabled={selectedAssetId === asset.id}>
+      <group
+        ref={ref}
+        position={asset.position}
+        rotation={asset.rotation}
+        scale={asset.scale}
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation(); // prevent bubbling to outer plane
+          if (e.delta <= 0) {
+            console.log('asset clicked');
+            setSelectedAssetId(asset.id);
+          }
+        }}
+      >
+        {model}
+      </group>
+    </Select>
   );
 });
 
