@@ -1,80 +1,257 @@
+@import '../../../styles/variables.scss';
+
 .sidebar {
   width: 280px;
   height: 100%;
-  background: rgba(30, 32, 38, 0.82);
-  backdrop-filter: blur(18px) saturate(160%);
-  border-radius: 22px 0 0 22px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18), -4px 0 24px rgba(0,0,0,0.10);
+  @include glass-effect;
+  border-radius: $radius-xl 0 0 $radius-xl;
+  border-left: 1px solid $glass-border;
   display: flex;
   flex-direction: column;
-  padding: 28px 22px;
+  padding: $spacing-xl;
   position: absolute;
   top: 0;
   right: 0;
   overflow-y: auto;
   z-index: 3;
+  @include custom-scrollbar;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
 }
 
 .heading {
-  font-size: 1.5rem;
+  font-size: $font-size-heading;
   font-weight: 600;
-  margin-bottom: 18px;
-  color: #fff;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  span{
-    font-size: 1rem;
+  margin-bottom: $spacing-lg;
+  color: $text-primary;
+  letter-spacing: $letter-spacing-heading;
+  text-shadow: 0 2px 8px $glass-shadow;
+  
+  span {
+    font-size: $font-size-body;
     font-weight: 400;
     width: 100%;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: $text-secondary;
+    letter-spacing: $letter-spacing-body;
   }
 }
 
 .empty {
-  font-size: 0.95rem;
-  color: #ccc;
-  line-height: 1.4;
+  font-size: $font-size-body;
+  color: $text-tertiary;
+  line-height: 1.5;
+  letter-spacing: $letter-spacing-body;
 }
 
 .section {
-  margin-bottom: 22px;
+  margin-bottom: $spacing-lg;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: $radius-sm;
+  padding: $spacing-sm;
 
   h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #fff;
+    font-size: $font-size-body;
+    font-weight: 500;
+    margin-bottom: $spacing-sm;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: $letter-spacing-body;
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+
+    .infoIcon {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+      cursor: help;
+      transition: opacity $transition-fast;
+      position: relative;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &::before {
+        content: 'Width × Depth × Height (in m)';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(100% + 5px);
+        background: rgba(0, 0, 0, 0.8);
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $radius-sm;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.9);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity $transition-fast;
+      }
+
+      &:hover::before {
+        opacity: 1;
+      }
+    }
   }
 }
 
-.label{
+.transformBlock {
+  margin-bottom: $spacing-lg;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: $spacing-xs;
+}
+
+.inputGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-sm;
+  width: 100%;
+
+  &.roomInputs {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    position: relative;
+
+    .input {
+      width: 50px !important;
+      min-width: 50px !important;
+      text-align: center !important;
+      padding: $spacing-xs !important;
+    }
+  }
+}
+
+.dimensionInputs {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: $spacing-xs;
+  margin-top: $spacing-xs;
+}
+
+.dimensionHelper {
+  color: $text-tertiary;
+  font-size: 0.85rem;
+  margin-left: auto;
+  cursor: help;
+  position: relative;
+
+  &:hover::before {
+    content: 'Width × Depth × Height';
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    margin-bottom: $spacing-xs;
+  }
 }
 
 .input {
-  width: 80px;
-  margin-right: 8px;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: none;
-  font-size: 0.95rem;
-  background: rgba(40, 42, 50, 0.72);
-  color: #f3f3f3;
-  outline: none;
-  display: block;
   width: 100%;
-  margin: 4px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  transition: background 0.2s, box-shadow 0.2s;
-  outline: 1px solid #424242;
+  min-width: 0;
+  margin: 0;
+  padding: $spacing-xs;
+  border-radius: $radius-sm;
+  border: 1px solid $glass-border;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgb(0, 157, 255);
+  outline: none;
+  text-align: right;
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+  transition: $transition-fast;
+  cursor: ew-resize !important;
+  @include input-reset;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 157, 255, 0.3);
+  }
 
   &:focus {
-    background: rgba(29, 31, 40, 0.88);
-    box-shadow: 0 4px 12px rgba(106,130,251,0.18);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: $glass-border-hover;
+    box-shadow: 0 2px 8px rgba(0, 157, 255, 0.15);
+  }
+
+  &:active {
+    cursor: ew-resize !important;
+    background: rgba(0, 157, 255, 0.1);
+    border-color: rgb(0, 157, 255);
+  }
+}
+
+.infoBlock {
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.textInput,
+.textArea {
+  width: 100%;
+  padding: $spacing-sm;
+  border-radius: $radius-sm;
+  border: 1px solid $glass-border;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.03);
+  color: $text-primary;
+  outline: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  transition: $transition-fast;
+  resize: none;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: $glass-border-hover;
+    box-shadow: 0 2px 8px rgba(0, 157, 255, 0.15);
   }
 }
 

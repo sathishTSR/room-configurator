@@ -1,17 +1,18 @@
 
+@import '../../../styles/variables.scss';
+
 .sidebar {
   width: 280px;
   height: 100%;
-  background: rgba(30, 32, 38, 0.82);
-  backdrop-filter: blur(18px) saturate(160%);
-  border-radius: 0 22px 22px 0;
-  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18), 4px 0 24px 0 rgba(0,0,0,0.10);
+  @include glass-effect;
+  border-radius: 0 $radius-xl $radius-xl 0;
+  border-right: 1px solid $glass-border;
   display: flex;
   flex-direction: column;
-  padding: 36px 28px 28px 24px;
+  padding: $spacing-xxl $spacing-xl $spacing-xl $spacing-lg;
   position: relative;
   z-index: 2;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: $transition-normal;
   &.closed {
     width: 80px;
     .content {
@@ -30,12 +31,12 @@
 }
 
 .heading {
-  font-size: 1.7rem;
-  font-weight: 800;
-  margin-bottom: 22px;
-  color: #fff;
-  letter-spacing: -0.5px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  font-size: $font-size-heading;
+  font-weight: 700;
+  margin-bottom: $spacing-xl;
+  color: $text-primary;
+  letter-spacing: $letter-spacing-heading;
+  text-shadow: 0 2px 8px $glass-shadow;
 }
 
 .burger {
@@ -67,21 +68,26 @@
 
 .search {
   width: 100%;
-  padding: 14px 48px 14px 20px;
-  border-radius: 999px;
-  border: none;
-  font-size: 1.08rem;
-  background: rgba(40,42,50,0.72);
-  backdrop-filter: blur(10px);
-  color: #f3f3f3;
+  padding: $spacing-md $spacing-xxl $spacing-md $spacing-lg;
+  border-radius: $radius-lg;
+  border: 1px solid $glass-border;
+  font-size: $font-size-subheading;
+  background: $glass-bg;
+  color: $text-primary;
   outline: none;
   box-sizing: border-box;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-  transition: box-shadow 0.18s, background 0.18s;
-}
-.search:focus {
-  background: rgba(50,52,60,0.88);
-  box-shadow: 0 4px 18px rgba(106,130,251,0.18);
+  transition: $transition-fast;
+  @include glass-effect;
+
+  &::placeholder {
+    color: $text-tertiary;
+  }
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: $glass-border-hover;
+    box-shadow: 0 4px 18px $glass-shadow;
+  }
 }
 
 .filterIcon {
@@ -142,20 +148,20 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s, background 0.18s;
-  border-radius: 18px;
-  padding: 18px 0 12px 0;
-  background: rgba(40,42,50,1);
-  backdrop-filter: blur(8px);
+  transition: $transition-normal;
+  border-radius: $radius-lg;
+  padding: $spacing-lg 0 $spacing-md 0;
   min-height: 130px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-  border: 1.5px solid transparent;
   position: relative;
-}
-.asset:hover {
-  transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 8px 32px rgba(106,130,251,0.10);
-  border: 1.5px solid #6a82fb;
+  @include glass-effect;
+  @include glass-gradient-border;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px $glass-shadow;
+    border-color: $glass-border-hover;
+  }
 }
 
 .assetImage {

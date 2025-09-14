@@ -1,0 +1,93 @@
+// Glass Effect Variables
+$glass-bg: rgba(255, 255, 255, 0.08);
+$glass-border: rgba(255, 255, 255, 0.08);
+$glass-border-hover: rgba(255, 255, 255, 0.15);
+$glass-shadow: rgba(0, 0, 0, 0.15);
+$glass-blur: blur(20px) saturate(180%);
+
+// Colors
+$text-primary: rgba(255, 255, 255, 0.95);
+$text-secondary: rgba(255, 255, 255, 0.7);
+$text-tertiary: rgba(255, 255, 255, 0.5);
+
+// Typography
+$font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+$font-size-heading: 1.5rem;
+$font-size-subheading: 1.1rem;
+$font-size-body: 0.95rem;
+$letter-spacing-heading: -0.02em;
+$letter-spacing-body: 0.01em;
+
+// Spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 12px;
+$spacing-lg: 16px;
+$spacing-xl: 24px;
+$spacing-xxl: 32px;
+
+// Border Radius
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+
+// Transitions
+$transition-fast: 0.2s ease-in-out;
+$transition-normal: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+// Mixins
+@mixin glass-effect {
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  -webkit-backdrop-filter: $glass-blur;
+  border: 1px solid $glass-border;
+  box-shadow: 0 8px 32px $glass-shadow;
+}
+
+@mixin glass-gradient-border {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05) 60%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+@mixin input-reset {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

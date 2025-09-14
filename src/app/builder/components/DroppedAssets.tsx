@@ -1,13 +1,11 @@
 import { useBuilderStore } from "../store";
-import React, { Suspense, useRef, useEffect, useState } from "react";
-import { Gltf } from "@react-three/drei";
+import React, { Suspense, useRef, useEffect, useState, forwardRef } from "react";
+import { Gltf, TransformControls } from "@react-three/drei";
 import HUDLoader from "./Loader";
 import { ThreeEvent } from "@react-three/fiber";
 import { Box3, Vector3, Group } from "three";
 
-function DroppedFurniture({
-  asset,
-}: {
+const DroppedFurniture = forwardRef<Group, {
   asset: {
     id: string;
     type: string;
@@ -15,29 +13,9 @@ function DroppedFurniture({
     rotation: [number, number, number];
     scale: [number, number, number];
   };
-}) {
+}>(({ asset }, ref) => {
   const setSelectedAssetId = useBuilderStore((s) => s.setSelectedAssetId);
-  const selectedAssetId = useBuilderStore((s) => s.selectedAssetId);
 
-  const isSelected = selectedAssetId === asset.id;
-
-  const groupRef = useRef<Group>(null);
-  const [boxSize, setBoxSize] = useState<[number, number, number]>([1, 1, 1]);
-
-  const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    e.stopPropagation(); // prevent bubbling to outer plane
-    setSelectedAssetId(asset.id);
-  };
-
-  // Measure bounding box when selected
-  useEffect(() => {
-    if (groupRef.current && isSelected) {
-      const box = new Box3().setFromObject(groupRef.current);
-      const size = new Vector3();
-      box.getSize(size);
-      setBoxSize([size.x * 1.1, size.y * 1.1, size.z * 1.1]); // add 10% padding
-    }
-  }, [isSelected]);
 
   let model = null;
   if (asset.type === "chair") {
@@ -55,30 +33,63 @@ function DroppedFurniture({
 
   return (
     <group
-      ref={groupRef}
+      ref={ref}
       position={asset.position}
       rotation={asset.rotation}
       scale={asset.scale}
-      onClick={handleClick}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation(); // prevent bubbling to outer plane
+        if (e.delta <= 0) {
+          console.log('asset clicked');
+          setSelectedAssetId(asset.id);
+        }
+      }}
     >
       {model}
-      {isSelected && (
-        <mesh>
-          <boxGeometry args={boxSize} />
-          <meshBasicMaterial color="yellow" wireframe />
-        </mesh>
-      )}
     </group>
   );
-}
+});
+
+DroppedFurniture.displayName = 'DroppedFurniture';
 
 function DroppedAssetsInner() {
   const droppedAssets = useBuilderStore((s) => s.droppedAssets);
+  const selectedAssetId = useBuilderStore((s) => s.selectedAssetId);
   const setSelectedAssetId = useBuilderStore((s) => s.setSelectedAssetId);
+  const updateSelectedAsset = useBuilderStore((s) => s.updateSelectedAsset);
 
-  const handleOuterClick = () => {
-    setSelectedAssetId(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const transformRef = useRef<any>(null);
+  const selectedAssetRef = useRef<Group>(null);
+  const [boxSize, setBoxSize] = useState<[number, number, number]>([1, 1, 1]);
+
+  // Handle transform changes only when user interaction ends
+  const handleTransformEnd = () => {
+    if (selectedAssetRef.current && selectedAssetId) {
+      const position = selectedAssetRef.current.position.toArray() as [number, number, number];
+      const rotation = selectedAssetRef.current.rotation.toArray().slice(0, 3) as [number, number, number];
+      const scale = selectedAssetRef.current.scale.toArray() as [number, number, number];
+      
+      updateSelectedAsset({
+        position,
+        rotation,
+        scale,
+      });
+    }
   };
+
+  // Measure bounding box when selected asset changes
+  useEffect(() => {
+    if (selectedAssetRef.current && selectedAssetId) {
+      const box = new Box3().setFromObject(selectedAssetRef.current);
+      const size = new Vector3();
+      box.getSize(size);
+      setBoxSize([size.x * 1.1, size.y * 1.1, size.z * 1.1]); // add 10% padding
+    }
+  }, [selectedAssetId]);
+
+  // Get the selected asset
+  const selectedAsset = droppedAssets.find(asset => asset.id === selectedAssetId);
 
   return (
     <>
@@ -86,7 +97,13 @@ function DroppedAssetsInner() {
       <mesh
         position={[0, -0.01, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
-        onClick={handleOuterClick}
+        onClick={(event) => {
+          event.stopPropagation(); // prevent bubbling to outer plane
+          if (event.delta <= 0) {
+            console.log('plane clicked');
+            setSelectedAssetId(null);
+          }
+        }}
       >
         <planeGeometry args={[100, 100]} />
         <meshBasicMaterial transparent opacity={0} />
@@ -97,9 +114,23 @@ function DroppedAssetsInner() {
           key={asset.id}
           fallback={<HUDLoader position={asset.position} />}
         >
-          <DroppedFurniture asset={asset} />
+          <DroppedFurniture 
+            ref={asset.id === selectedAssetId ? selectedAssetRef : undefined}
+            asset={asset} 
+          />
         </Suspense>
       ))}
+
+      {/* Transform Controls for selected asset */}
+      {selectedAsset && selectedAssetRef.current && (
+        <TransformControls
+          ref={transformRef}
+          object={selectedAssetRef.current}
+          mode="translate"
+          onMouseUp={handleTransformEnd}
+          size={0.7}
+        />
+      )}
     </>
   );
 }

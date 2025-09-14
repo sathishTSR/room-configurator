@@ -83,7 +83,7 @@ export default function Builder() {
               addDroppedAsset={addDroppedAsset}
               setDroppingAsset={setDroppingAsset}
             />
-            <OrbitControls />
+            <OrbitControls makeDefault />
           </CanvasWithRefs>
         </Canvas>
       </div>
